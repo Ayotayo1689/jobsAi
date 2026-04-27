@@ -1,0 +1,10 @@
+{
+  "ignore": [
+    ".wwebjs_auth/**",
+    ".wwebjs_cache/**",
+    "data/db.json",
+    "uploads/**"
+  ],
+  "watch": ["*.js", "routes/**", "services/**", "data/store.js", "config.js"],
+  "ext": "js,json"
+}
