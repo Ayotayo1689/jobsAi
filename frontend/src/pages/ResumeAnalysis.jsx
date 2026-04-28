@@ -4,7 +4,7 @@ import toast from 'react-hot-toast'
 import {
   Upload, FileText, Trash2, CheckCircle2, AlertTriangle,
   User, Briefcase, GraduationCap, Zap, TrendingUp, Target,
-  BarChart3, Star, RefreshCw
+  BarChart3, Star, RefreshCw, PenLine, X
 } from 'lucide-react'
 import { resumeAPI } from '../api/client'
 
@@ -37,6 +37,9 @@ export default function ResumeAnalysis() {
   const [resume, setResume] = useState(null)
   const [uploading, setUploading] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [editMode, setEditMode] = useState(false)
+  const [editText, setEditText] = useState('')
+  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
     resumeAPI.get()
@@ -50,8 +53,9 @@ export default function ResumeAnalysis() {
     setUploading(true)
     const tid = toast.loading(`Parsing & analyzing ${file.name}...`)
     try {
-      const result = await resumeAPI.upload(file)
-      setResume({ analysis: result.analysis, filename: file.name, uploadedAt: new Date().toISOString() })
+      await resumeAPI.upload(file)
+      const r = await resumeAPI.get()
+      setResume(r.resume)
       toast.success('Resume analyzed successfully!', { id: tid })
     } catch (err) {
       toast.error(err.message, { id: tid })
@@ -66,6 +70,30 @@ export default function ResumeAnalysis() {
     maxFiles: 1,
     disabled: uploading
   })
+
+  const openEdit = () => {
+    setEditText(resume?.text || '')
+    setEditMode(true)
+  }
+
+  const handleSaveEdit = async () => {
+    if (!editText.trim() || editText.trim().length < 50) {
+      toast.error('Resume text is too short')
+      return
+    }
+    setSaving(true)
+    const tid = toast.loading('Re-analyzing your resume…')
+    try {
+      const result = await resumeAPI.updateText(editText)
+      setResume(prev => ({ ...prev, text: editText.trim(), analysis: result.analysis }))
+      setEditMode(false)
+      toast.success('Resume updated and re-analyzed!', { id: tid })
+    } catch (err) {
+      toast.error(err.message, { id: tid })
+    } finally {
+      setSaving(false)
+    }
+  }
 
   const handleDelete = async () => {
     if (!confirm('Remove your resume?')) return
@@ -99,9 +127,14 @@ export default function ResumeAnalysis() {
             <p className="text-ink-sub text-sm mt-1.5">Upload your resume for AI-powered analysis</p>
           </div>
           {resume && (
-            <button onClick={handleDelete} className="btn-danger text-sm">
-              <Trash2 size={14} /> Remove
-            </button>
+            <div className="flex gap-2">
+              <button onClick={openEdit} className="btn-secondary text-sm">
+                <PenLine size={14} /> Edit Text
+              </button>
+              <button onClick={handleDelete} className="btn-danger text-sm">
+                <Trash2 size={14} /> Remove
+              </button>
+            </div>
           )}
         </div>
       </div>
@@ -148,8 +181,45 @@ export default function ResumeAnalysis() {
           </div>
         )}
 
+        {/* Edit mode */}
+        {editMode && (
+          <div className="card p-5 space-y-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="font-semibold text-ink">Edit Resume Text</h3>
+                <p className="text-xs text-ink-muted mt-0.5">Make changes, then save to trigger a fresh AI analysis</p>
+              </div>
+              <button onClick={() => setEditMode(false)} className="btn-ghost p-1.5 mt-0.5">
+                <X size={16} />
+              </button>
+            </div>
+            <textarea
+              className="w-full font-mono text-xs text-ink-mid leading-relaxed resize-y border border-edge rounded-lg p-3 focus:outline-none focus:border-accent bg-gray-50 min-h-[480px]"
+              value={editText}
+              onChange={e => setEditText(e.target.value)}
+              spellCheck={false}
+              disabled={saving}
+            />
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-ink-muted">
+                {editText.split(/\s+/).filter(Boolean).length} words
+              </span>
+              <div className="flex gap-2">
+                <button onClick={() => setEditMode(false)} disabled={saving} className="btn-secondary text-sm">
+                  Cancel
+                </button>
+                <button onClick={handleSaveEdit} disabled={saving} className="btn-primary text-sm">
+                  {saving
+                    ? <><RefreshCw size={13} className="animate-spin" /> Re-analyzing…</>
+                    : <><PenLine size={13} /> Save & Re-analyze</>}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Analysis results */}
-        {resume && a && (
+        {!editMode && resume && a && (
           <div className="space-y-5">
             {/* Profile header */}
             <div className="card p-5">

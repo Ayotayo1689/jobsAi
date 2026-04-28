@@ -221,7 +221,7 @@ export default function WhatsApp() {
               <div className="text-center py-6">
                 <RefreshCw size={28} className="text-brand animate-spin mx-auto mb-3" />
                 <p className="text-sm text-ink-sub">Starting WhatsApp…</p>
-                <p className="text-xs text-ink-muted mt-1">This may take 30–60 seconds</p>
+                <p className="text-xs text-ink-muted mt-1">This may take 1–2 minutes on first start</p>
               </div>
             )}
           </div>

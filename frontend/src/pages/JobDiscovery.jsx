@@ -288,6 +288,11 @@ function ApplyModal({ job, onClose, onApplied }) {
                 </div>
               </div>
             </div>
+
+            {/* Footer */}
+            <div className="px-5 py-3 border-t border-edge flex justify-end">
+              <button onClick={onClose} className="btn-primary text-sm px-6">Done</button>
+            </div>
           </div>
         )}
 
@@ -720,7 +725,6 @@ export default function JobDiscovery() {
           onClose={() => setApplyJob(null)}
           onApplied={(job) => {
             setAppliedJobs(prev => new Set([...prev, jobKey(job)]))
-            setApplyJob(null)
           }}
         />
       )}

@@ -239,6 +239,7 @@ module.exports = {
   sseClients,
   getStatus: () => status,
   getCurrentQR: () => currentQR,
+  getGroupsCache: () => groups,
   setMonitoredGroups: (ids) => { monitoredGroups = new Set(ids); },
   getMonitoredGroups: () => [...monitoredGroups],
   setThreshold: (t) => { autoApplyThreshold = Math.max(0, Math.min(100, Number(t))); },

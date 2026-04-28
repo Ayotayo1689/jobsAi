@@ -60,6 +60,27 @@ router.get('/', (req, res) => {
   res.json({ resume: data.resume || null });
 });
 
+router.put('/text', async (req, res) => {
+  const { text } = req.body;
+  if (!text?.trim() || text.trim().length < 50) {
+    return res.status(400).json({ error: 'Resume text is too short.' });
+  }
+  try {
+    const analysis = await analyzeResume(text.trim());
+    store.update(data => {
+      if (data.resume) {
+        data.resume.text = text.trim();
+        data.resume.analysis = analysis;
+        data.resume.editedAt = new Date().toISOString();
+      }
+      return data;
+    });
+    res.json({ success: true, analysis });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 router.delete('/', (req, res) => {
   store.update(data => {
     data.resume = null;

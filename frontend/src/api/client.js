@@ -30,6 +30,7 @@ export const resumeAPI = {
     })
   },
   get: () => api.get('/resume'),
+  updateText: (text) => api.put('/resume/text', { text }, { timeout: 120000 }),
   delete: () => api.delete('/resume')
 }
 

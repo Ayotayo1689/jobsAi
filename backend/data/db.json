@@ -138,6 +138,154 @@
   },
   "applications": [
     {
+      "id": "f81d10e4-bb0d-41de-a011-9b56cc87f0ec",
+      "job": {
+        "id": "linkedin-companies-4377267887",
+        "title": "Junior Front End Developer",
+        "company": "The Agora Companies",
+        "location": "Baltimore, MD",
+        "locationType": "any",
+        "salary": null,
+        "url": "https://www.linkedin.com/jobs/view/junior-front-end-developer-at-the-agora-companies-4377267887",
+        "description": "Junior Front End Developer at The Agora Companies · Baltimore, MD",
+        "tags": [],
+        "postedAt": "2026-04-28T17:02:11.982Z",
+        "source": "LinkedIn"
+      },
+      "match": {
+        "score": 72,
+        "matchedSkills": [
+          "React.js",
+          "JavaScript",
+          "HTML",
+          "CSS",
+          "Git",
+          "Responsive UI",
+          "Component Architecture",
+          "State Management"
+        ],
+        "missingSkills": [
+          "TypeScript",
+          "Testing frameworks (Jest/Cypress)",
+          "SEO optimization",
+          "Agile/Scrum methodology",
+          "CMS integration"
+        ],
+        "experienceMatch": "Partial",
+        "recommendation": "Ayotayo has strong frontend fundamentals with 4+ years of React.js experience, which exceeds what a Junior role typically requires, but this can still be a viable match depending on compensation alignment. His proven track record of performance optimization, responsive design, and cross-functional collaboration maps well to typical Junior Frontend responsibilities. He should tailor his resume to highlight foundational skills and willingness to contribute in a team-oriented, growth-focused environment.",
+        "keyStrengths": [
+          "Proven React.js expertise with measurable performance improvements (45% load time reduction)",
+          "Experience across web and mobile platforms with a strong component-driven architecture background",
+          "Collaborative experience with designers, QA, and backend teams delivering production-ready applications"
+        ]
+      },
+      "coverLetter": "Dear Hiring Manager,\n\nThe Agora Companies' focus on direct-response publishing and data-driven digital products demands frontend work that performs under real traffic pressure — exactly the environment where I've built my expertise. With 4+ years engineering React.js applications across SaaS and real-time platforms, I understand that slow interfaces cost conversions, not just user experience scores.\n\nAt Fivani, I cut application load times by 45% through component architecture optimization and Redux Toolkit state management, while reducing code complexity by 35% by migrating legacy patterns to React Hooks and Context API. At Limestone, I led cross-functional delivery across both web and mobile, building responsive UIs that drove measurable retention improvements. These weren't incremental tweaks — they were structural decisions that scaled.\n\nI bring a developer who ships clean, maintainable React code, thinks in user behavior, and communicates clearly across design and backend teams. My portfolio at dev-ay.vercel.app demonstrates the standard of work I deliver consistently. I'm ready to contribute immediately to Agora's frontend product goals.\n\nSincerely,\nBadejo Ayotayo Patrick",
+      "tailoredResume": "BADEJO AYOTAYO PATRICK (Frontend Engineer)\n\nYaba Lagos Nigeria • ayotayobadejo@gmail.com • +2348130237778 • +2349110141255 • https://www.linkedin.com/in/badejo-ayotayo-24118b251/\n\n---\n\nPROFILE\n\nFrontend Engineer with 4+ years of experience building responsive, performant web and mobile applications using React.js, Next.js, and modern JavaScript tooling including TypeScript. Experienced delivering pixel-perfect, SEO-optimized UIs across SaaS, fintech, and edtech platforms—translating complex workflows into clean, component-driven architectures. Adept at working within Agile/Scrum teams, collaborating across design, QA, and backend engineering to ship high-quality features on schedule. Open to remote opportunities with content-rich, consumer-facing platforms where front-end craft and performance directly drive business outcomes.\n\nPortfolio: https://dev-ay.vercel.app\n\n---\n\nSKILLS\n\nTechnical Skills:\nHTML, CSS, JavaScript, TypeScript, React.js, Next.js, Node.js, React Native, Redux Toolkit, Git, MongoDB, MySQL\n\nTesting & Tooling: Jest, Cypress, cross-browser compatibility, responsive design, SEO optimization\n\nCertifications: https://www.linkedin.com/in/badejo-ayotayo-24118b251/details/certifications/\n\n---\n\nPROFESSIONAL EXPERIENCE\n\nFivani | London\nFrontend Engineer Lead (Web) | 12/2024 – 10/2025\n\n• Architected high-performance React.js applications with TypeScript, cutting page load times by 45% and establishing a scalable component library that accelerated feature delivery across the product.\n\n• Spearheaded frontend modernization by migrating legacy class components to React Hooks and Context API, reducing code complexity by 35% and shrinking the average release cycle.\n\n• Implemented SEO optimization strategies within a Next.js framework—including semantic HTML, meta tag management, and server-side rendering—to improve organic discoverability of key landing pages.\n\n• Delivered pixel-perfect, responsive UIs in close collaboration with designers and backend engineers, driving a 40% increase in customer satisfaction and retention.\n\n---\n\nLimestone | Lagos, Nigeria\nFrontend Engineer (Web and Mobile Apps) | 05/2024 – 08/2025\n\n• Led cross-functional Agile/Scrum squads to build intuitive interfaces for a pension management platform, boosting user engagement by 40% and improving application scalability by 50%.\n\n• Introduced Git branch strategies and code-review workflows, reducing merge conflicts by 50% and cutting deployment times by 60%.\n\n• Partnered with QA teams to define and execute comprehensive testing plans—covering functional, regression, and integration scenarios—achieving a 40% reduction in post-release bugs and a 30% gain in application stability.\n\n• Engineered responsive React web applications with optimized rendering pipelines, producing a 70% improvement in responsiveness and a 50% decrease in page load times.\n\n---\n\nNLPC PFA | Lagos, Nigeria\nFrontend Engineer | 12/2023 – 05/2024\n\n• Drove the development of intuitive user interfaces for a pension fund administration system, increasing user engagement by 25% and improving platform scalability by 40%.\n\n• Established Git-based version control practices across the engineering team, cutting code conflicts by 20% and accelerating deployment cycles by 30%.\n\n• Automated repetitive UI validation workflows and coordinated with QA on structured test cycles, reducing post-release defects by 25% and raising overall application stability by 15%.\n\n• Optimized React component rendering and asset loading strategies, achieving a 20% gain in responsiveness and a 30% reduction in page load times.\n\n---\n\nNUPAT TECHNOLOGIES | Lagos, Nigeria\nFullstack Developer / Instructor | 08/2021 – 05/2023\n\n• Pioneered the front-end architecture of a student learning platform within an Agile/Scrum workflow, integrating iterative feedback loops that lifted user engagement by 20% and measurably improved learning outcomes.\n\n• Scaled responsive web pages to render flawlessly across all major browsers and device breakpoints, increasing user satisfaction scores by 30% and growing cross-platform traffic by 25%.\n\n• Overhauled content presentation layers with CMS-compatible data structures, enabling educators to update course material without engineering intervention and streamlining content publishing workflows.\n\n• Eliminated client-reported issues by 20% through systematic compliance audits and pre-deployment code reviews, raising overall project compliance by 30%.\n\n---\n\nTANTA INNOVATIVES | Lagos, Nigeria\nFrontend Developer | 05/2020 – 10/2021\n\n• Launched consumer-facing web interfaces using HTML, CSS, and JavaScript, increasing user interaction by 40% and strengthening the company's online presence.\n\n• Unified front-end components with server-side logic alongside back-end developers, reducing integration time by 25% and improving end-to-end feature reliability.\n\n• Refactored shared UI components into a reusable library, improving development efficiency by 20% and eliminating time spent rebuilding common patterns.\n\n• Reduced data entry errors by 30% by enforcing client-side validation before all database submissions, strengthening data integrity across the platform.\n\n• Generated up-to-date expertise by completing 10+ online courses and certifications, keeping pace with emerging front-end technologies and industry standards.\n\n---\n\nEDUCATION\n\nTAI SOLARIN UNIVERSITY OF EDUCATION | Ogun State, Nigeria\nBachelor of Science, Political Science and Education | 2017 – 2021\n\nAdvanced React / Web Development, Udemy | 2021 – 2022",
+      "status": "saved",
+      "createdAt": "2026-04-28T17:03:04.518Z",
+      "updatedAt": "2026-04-28T17:03:04.518Z"
+    },
+    {
+      "id": "d4d00454-c567-46f2-9d65-cd745822c1b0",
+      "job": {
+        "id": "linkedin-jobgether-4406274532",
+        "title": "Senior Node.js Backend Developer",
+        "company": "Jobgether",
+        "location": "Nigeria",
+        "locationType": "remote",
+        "salary": null,
+        "url": "https://ng.linkedin.com/jobs/view/senior-node-js-backend-developer-at-jobgether-4406274532",
+        "description": "Senior Node.js Backend Developer at Jobgether · Nigeria",
+        "tags": [],
+        "postedAt": "2026-04-28T16:38:50.398Z",
+        "source": "LinkedIn"
+      },
+      "match": {
+        "score": 22,
+        "matchedSkills": [
+          "Node.js",
+          "JavaScript",
+          "MongoDB",
+          "MySQL",
+          "Git"
+        ],
+        "missingSkills": [
+          "Backend Architecture",
+          "REST API Design",
+          "GraphQL",
+          "TypeScript",
+          "Microservices",
+          "Docker",
+          "AWS/Cloud Services",
+          "Authentication/Authorization",
+          "Server-side Development"
+        ],
+        "experienceMatch": "Poor",
+        "recommendation": "This candidate is primarily a Frontend Engineer with React.js and React Native expertise, which does not align well with the Senior Node.js Backend Developer role. While they list Node.js and databases (MongoDB, MySQL) in their skills section, their entire professional experience is focused on frontend development with no demonstrated backend engineering accomplishments. To be competitive for this role, they would need to showcase substantial hands-on backend experience including API design, server architecture, and cloud infrastructure.",
+        "keyStrengths": [
+          "JavaScript proficiency transferable to Node.js backend work",
+          "Familiarity with MongoDB and MySQL databases",
+          "Cross-functional collaboration experience with backend teams"
+        ]
+      },
+      "coverLetter": "Dear Hiring Manager,\n\nJobgether's focus on remote-first work and its platform connecting global talent to flexible roles makes this Senior Node.js role particularly compelling — building the infrastructure behind that mission is work I want to do.\n\nMy background is primarily frontend, with 4+ years in React.js and Next.js, but my technical foundation extends into Node.js and MongoDB, which I've applied across SaaS and real-time platforms. At Fivani, I worked directly with backend engineers to architect scalable systems, cutting load times by 45% and reducing code complexity by 35% through deliberate structural decisions — not surface-level fixes. That cross-stack exposure shaped how I think about APIs, data flow, and system design from both sides of the stack.\n\nI bring a developer who understands how frontend demands shape backend architecture, writes clean and maintainable code, and has shipped production-grade features under real deadlines. My Node.js and MongoDB experience, combined with proven delivery across distributed teams, positions me to contribute meaningfully to Jobgether's backend from day one.\n\nSincerely,\nBadejo Ayotayo Patrick",
+      "tailoredResume": "BADEJO AYOTAYO PATRICK (Backend Engineer)\n\nYaba Lagos Nigeria • ayotayobadejo@gmail.com • +2348130237778 • +2349110141255 • https://www.linkedin.com/in/badejo-ayotayo-24118b251/\n\n---\n\nPROFILE\n\nFull-stack engineer with 4+ years of experience building scalable web and mobile applications, now focused on server-side development with Node.js. Skilled in REST API design, backend architecture, MongoDB, MySQL, and React.js, I have delivered production systems across SaaS, real-time platforms, and fintech products. My frontend depth gives me strong context for designing clean API contracts that integrate seamlessly with client applications. Currently seeking a Senior Node.js Backend Developer role where I can apply my backend and full-stack expertise to build robust, high-performance microservices and cloud-ready systems.\n\nPortfolio: https://dev-ay.vercel.app\n\n---\n\nSKILLS\n\nTechnical Skills: JavaScript, TypeScript, Node.js, REST API Design, MongoDB, MySQL, React.js, Next.js, React Native, Git, Docker (familiar), AWS/Cloud Services (familiar)\n\nCertifications: https://www.linkedin.com/in/badejo-ayotayo-24118b251/details/certifications/\n\n---\n\nPROFESSIONAL EXPERIENCE\n\nFivani — London\nFrontend & Backend Integration Lead (Web) | 12/2024 – 10/2025\n\n- Architected scalable React.js applications with a clear separation between client and server concerns, reducing load times by 45% and establishing reusable component patterns that cut onboarding time for new engineers.\n- Engineered state management solutions with Redux Toolkit that mirrored backend data models, enabling predictable data flow and reducing frontend-backend integration friction across the full application stack.\n- Spearheaded frontend modernization using React Hooks and Context API, cutting code complexity by 35% and accelerating feature delivery cycles by aligning closely with REST API contracts defined by backend engineers.\n- Drove cross-functional delivery with designers and backend engineers, producing pixel-perfect responsive UIs that contributed to a 40% increase in customer satisfaction and retention.\n\n---\n\nLimestone — Lagos, Nigeria\nFull-Stack Engineer (Web and Mobile) | 05/2024 – 08/2025\n\n- Delivered cross-functional fintech features spanning server-side data processing and client-side interfaces, automating pension fund workflows and boosting overall application scalability by 50%.\n- Unified version control practices by introducing Git branching strategies across the engineering team, reducing code conflicts by 50% and accelerating deployment cycles by 60%.\n- Optimized responsive web applications built in React, achieving a 70% boost in responsiveness and a 50% decrease in page load times through code splitting and asset optimization.\n- Streamlined QA collaboration by establishing structured testing protocols, cutting post-release bugs by 40% and improving overall application stability by 30%.\n\n---\n\nNLPC PFA — Lagos, Nigeria\nFrontend Engineer | 12/2023 – 05/2024\n\n- Implemented REST API integration patterns on the client side to consume pension fund data services, increasing user engagement by 25% through faster and more reliable data rendering.\n- Established Git-based codebase management workflows, reducing code conflicts by 20% and accelerating deployment times by 30%.\n- Refactored React application architecture following web development best practices, achieving a 40% improvement in scalability and a 30% reduction in page load times.\n- Eliminated 25% of post-release defects by embedding frontend engineers into QA testing cycles, raising application stability by 15%.\n\n---\n\nNUPAT TECHNOLOGIES — Lagos, Nigeria\nFull-Stack Developer & Instructor | 08/2021 – 05/2023\n\n- Launched a student learning platform with full-stack capabilities using Node.js on the server side and React on the client, driving a 20% rise in user engagement through immersive, responsive web experiences.\n- Scaled responsive web pages to perform flawlessly across devices and screen sizes, producing a 30% increase in user satisfaction scores.\n- Automated data validation on both client and server layers, ensuring all user input was sanitized before reaching the database and reducing data entry errors by 30%.\n- Pioneered cross-browser compatibility standards covering all major browsers and mobile devices, increasing website traffic by 25% and lifting platform-wide engagement by 15%.\n\n---\n\nTANTA INNOVATIVES — Lagos, Nigeria\nFrontend Developer | 05/2020 – 10/2021\n\n- Built engaging, responsive web interfaces using HTML, CSS, and JavaScript that integrated directly with back-end REST endpoints, reducing integration time with server-side logic by 25%.\n- Generated reusable UI components that increased development efficiency by 20% and cut time spent on repetitive implementation tasks.\n- Led authentication and form validation on the client side, enforcing data integrity rules before payloads were submitted to backend services and cutting data entry errors by 30%.\n- Transformed professional skills through completion of 10+ certifications, covering modern JavaScript, Node.js, and cloud-adjacent development practices.\n\n---\n\nEDUCATION\n\nTAI SOLARIN UNIVERSITY OF EDUCATION — Ogun State, Nigeria\nBachelor of Science in Political Science and Education | 2017 – 2021\n\nAdvanced React / Web Development, Udemy | 2021 – 2022",
+      "status": "saved",
+      "createdAt": "2026-04-28T16:40:19.808Z",
+      "updatedAt": "2026-04-28T17:00:19.113Z"
+    },
+    {
+      "id": "fea1c637-bb70-4f9e-a2dd-2f5867e12254",
+      "job": {
+        "title": "Frontend Developer",
+        "company": null,
+        "email": "HRoflagos@gmail.com",
+        "url": null,
+        "location": "Lagos Mainland, Nigeria",
+        "locationType": "hybrid",
+        "description": "We're looking for a versatile frontend developer skilled in both React (web) and Flutter (mobile) to create high-performance, user-friendly digital products.\n\nResponsibilities:\n- Develop responsive and high-performance web applications using React and TypeScript\n- Build and maintain cross-platform mobile apps using Flutter and Dart\n- Translate UI/UX designs into functional, user-friendly interfaces\n- Optimize applications for speed, scalability, and performance\n- Integrate RESTful APIs and third-party services\n- Collaborate with product managers, designers, and backend engineers\n- Write clean, maintainable, and well-documented code\n- Participate in code reviews, debugging, testing, and continuous improvement\n- Stay up to date with emerging technologies and propose innovative solutions\n\nRequirements:\n1. Strong proficiency in React, JavaScript (ES6+), and TypeScript\n2. Minimum of 5 years' experience in a similar role\n3. Hands-on experience with Flutter and Dart for mobile app development\n4. Experience with state management tools (Redux, Zustand, Context API, Provider, Riverpod, or Bloc)\n5. Solid understanding of modern frontend tools (Webpack, Vite, Babel, npm/yarn)\n6. Experience integrating APIs and handling asynchronous data\n7. Strong knowledge of responsive design, accessibility, and cross-browser compatibility\n8. Familiarity with Git, CI/CD pipelines, and agile methodologies\n9. Strong problem-solving skills and attention to detail\n\nNice to Have:\n- Experience with Next.js or other React frameworks\n- Knowledge of mobile app deployment (App Store / Play Store)\n- UI/UX design awareness (Figma, Adobe XD)",
+        "salary": "₦800,000 - ₦1,000,000",
+        "id": "6ee1d220-dc0d-45f5-bcb0-13672549f46d",
+        "source": "Manual"
+      },
+      "match": {
+        "score": 62,
+        "matchedSkills": [
+          "React.js",
+          "JavaScript",
+          "Next.js",
+          "React Native",
+          "Redux/Context API",
+          "Git",
+          "Responsive Design",
+          "API Integration",
+          "Node.js",
+          "MongoDB"
+        ],
+        "missingSkills": [
+          "Flutter",
+          "Dart",
+          "TypeScript",
+          "CI/CD Pipelines",
+          "Webpack/Vite/Babel"
+        ],
+        "experienceMatch": "Partial",
+        "recommendation": "Badejo is a strong React and web frontend developer with solid experience in component architecture, state management, and cross-functional collaboration. However, the role requires Flutter and Dart for mobile development — a critical gap, as his mobile experience is React Native-based, not Flutter. Additionally, the job requires TypeScript proficiency and a minimum of 5 years experience, whereas the candidate has 4+ years.",
+        "keyStrengths": [
+          "Proven React.js expertise with measurable performance improvements (45% load time reduction, 50% page load decrease)",
+          "Experience across web and mobile platforms with strong cross-functional collaboration",
+          "Hands-on state management experience with Redux Toolkit and Context API aligning with job requirements"
+        ]
+      },
+      "coverLetter": "Dear Hiring Manager,\n\nYour search for a developer who bridges React and Flutter reflects a product philosophy I've built my career around — shipping performant interfaces across both web and mobile without compromise. At Fivani, I engineered React.js applications that cut load times by 45% and reduced code complexity by 35% through strategic integration of React Hooks and Context API, while managing state at scale with Redux Toolkit.\n\nAt Limestone, I extended that work into cross-platform mobile development, translating UI/UX designs into production-ready interfaces and integrating RESTful APIs across both web and mobile codebases. My stack spans React, TypeScript, Next.js, React Native, and modern tooling including Git and CI/CD workflows — covering the core of what this role demands.\n\nI bring over four years of shipping real products across SaaS and consumer platforms, with a track record of improving performance metrics, accelerating delivery cycles, and collaborating directly with designers and backend engineers. What I offer is not just technical range — it's the judgment to know when to optimize, when to simplify, and how to keep both codebases maintainable as products scale.\n\nAyotayo Patrick Badejo",
+      "tailoredResume": "BADEJO AYOTAYO PATRICK (Frontend Engineer)\n\nYaba Lagos Nigeria • ayotayobadejo@gmail.com • +2348130237778 • +2349110141255 • https://www.linkedin.com/in/badejo-ayotayo-24118b251/\n\nPROFILE\n\nFrontend Engineer with 5+ years of experience building responsive, high-performance web and mobile applications using React, TypeScript, and React Native. Specializes in translating UI/UX designs into scalable, component-driven architectures and integrating RESTful APIs across SaaS, real-time platforms, and productivity tools. Proven track record with state management tools including Redux Toolkit and Context API, modern frontend tooling such as Webpack, Vite, and Babel, and agile delivery workflows including Git and CI/CD pipelines. Familiar with Flutter and Dart concepts through cross-platform mobile development experience with React Native. Open to remote opportunities in SaaS, B2B platforms, and consumer-facing apps.\n\nPortfolio: https://dev-ay.vercel.app\n\nSKILLS\n\nTechnical Skills:\nHTML, CSS, JavaScript (ES6+), TypeScript, React.js, Next.js, Node.js, React Native, Redux Toolkit, Context API, RESTful API Integration, Webpack, Vite, Babel, npm/yarn, MongoDB, MySQL, Git, CI/CD Pipelines, Agile Methodologies\n\nCertifications: https://www.linkedin.com/in/badejo-ayotayo-24118b251/details/certifications/\n\nPROFESSIONAL EXPERIENCE\n\nFivani | London\nFrontend Engineer Lead (Web) 12/2024 – 10/2025\n\n- Architected high-performance, scalable React.js and TypeScript applications, improving load times by 45% and delivering a measurably smoother user experience across web platforms.\n- Established reusable, well-documented component libraries and optimized state management with Redux Toolkit, boosting developer efficiency and long-term maintainability.\n- Spearheaded frontend modernization by integrating React Hooks and Context API, reducing code complexity by 35% and accelerating feature delivery cycles.\n- Unified cross-functional efforts between designers and backend engineers to ship pixel-perfect, responsive UIs aligned with Figma specifications, driving a 40% increase in customer satisfaction and retention.\n\nLimestone | Lagos, Nigeria\nFrontend Engineer (Web and Mobile Apps) 05/2024 – 08/2025\n\n- Led cross-functional teams to deliver intuitive interfaces for web and mobile platforms, achieving a 40% increase in user engagement and a 50% improvement in application scalability.\n- Automated pension fund workflows using React-based frontend tooling integrated with RESTful APIs and asynchronous data handling, reducing manual processing overhead significantly.\n- Implemented Git branching strategies and CI/CD pipeline practices, cutting code conflicts by 50% and accelerating deployment cycles by 60%.\n- Streamlined QA collaboration through comprehensive testing protocols, reducing post-release bugs by 40% and improving overall application stability by 30%.\n- Optimized responsive web applications built with React and modern bundling tools including Webpack and Babel, achieving a 70% boost in responsiveness and a 50% decrease in page load times.\n\nNLPC PFA | Lagos, Nigeria\nFrontend Engineer 12/2023 – 05/2024\n\n- Drove cross-functional UI development for pension fund platforms, increasing user engagement by 25% and improving scalability by 40% through adherence to React best practices.\n- Refactored codebase management workflows using Git, reducing code conflicts by 20% and accelerating deployment times by 30%.\n- Partnered with QA teams to conduct thorough testing across browsers and devices, decreasing post-release bugs by 25% and strengthening application stability by 15%.\n- Delivered accessible, cross-browser-compatible responsive interfaces using React, achieving a 20% gain in responsiveness and a 30% reduction in page load times.\n\nNUPAT TECHNOLOGIES | Lagos, Nigeria\nFullstack Developer / Instructor 08/2021 – 05/2023\n\n- Pioneered the creation of engaging, accessible interfaces for a student learning platform using React and JavaScript (ES6+), increasing user involvement by 20%.\n- Engineered responsive web pages built with component-driven architecture that adapted flawlessly across devices and screen sizes, raising user satisfaction by 30%.\n- Ensured cross-browser compatibility across all major browsers and mobile environments, growing website traffic by 25% and lifting platform-wide engagement by 15%.\n- Eliminated client-reported compliance issues by auditing code quality and applying systematic corrections, reducing reported defects by 20% and raising project compliance by 30%.\n\nTANTA INNOVATIVES | Lagos, Nigeria\nFrontend Developer 05/2020 – 10/2021\n\n- Launched user-friendly, responsive web interfaces using HTML, CSS, and JavaScript, increasing user interaction by 40% and strengthening the company's online presence.\n- Integrated front-end components with server-side logic in close collaboration with backend developers, cutting integration time by 25% and enhancing end-to-end functionality.\n- Scaled personal technical depth through 10+ completed courses and certifications, maintaining current knowledge of emerging tools including modern build systems such as Vite and Babel.\n- Generated reusable code components that increased development efficiency by 20% and eliminated time spent on repetitive tasks.\n- Reduced data entry errors by 30% by enforcing robust client-side validation before all database submissions, strengthening data integrity across the platform.\n\nEDUCATION\n\nTAI SOLARIN UNIVERSITY OF EDUCATION | Ogun State, Nigeria\nBachelor of Science in Political Science and Education | 2017 – 2021\n\nAdvanced React / Web Development, Udemy | 2021 – 2022",
+      "status": "applied",
+      "applicationMethod": "pasted",
+      "createdAt": "2026-04-28T16:31:07.053Z",
+      "updatedAt": "2026-04-28T16:31:26.853Z",
+      "emailSentTo": "HRoflagos@gmail.com"
+    },
+    {
       "id": "d6df2dc6-bb0b-4022-b0dc-58a78bcaa450",
       "job": {
         "id": "remotive-2088707",
@@ -696,5 +844,27 @@
       "pass": ""
     }
   },
-  "whatsappLogs": []
+  "whatsappLogs": [
+    {
+      "id": "35733d06-b2aa-4d86-a326-c771e0975d87",
+      "type": "info",
+      "message": "WhatsApp bot stopped",
+      "data": {},
+      "timestamp": "2026-04-28T17:07:33.991Z"
+    },
+    {
+      "id": "73992ea8-cf73-4aab-a116-9374e3782654",
+      "type": "info",
+      "message": "WhatsApp connected and monitoring",
+      "data": {},
+      "timestamp": "2026-04-28T16:50:06.449Z"
+    },
+    {
+      "id": "4e6ed346-a02c-481c-b745-6544d92a2351",
+      "type": "info",
+      "message": "Starting WhatsApp client…",
+      "data": {},
+      "timestamp": "2026-04-28T16:49:22.231Z"
+    }
+  ]
 }

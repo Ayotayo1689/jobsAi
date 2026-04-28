@@ -16,6 +16,14 @@ router.get('/events', (req, res) => {
   const qr = whatsapp.getCurrentQR();
   res.write(`event: status\ndata: ${JSON.stringify({ status, qr })}\n\n`);
 
+  // Re-send cached groups so navigating to the page after connect still shows them
+  if (status === 'ready') {
+    const cached = whatsapp.getGroupsCache();
+    if (cached.length > 0) {
+      res.write(`event: groups\ndata: ${JSON.stringify(cached)}\n\n`);
+    }
+  }
+
   whatsapp.sseClients.add(res);
   req.on('close', () => whatsapp.sseClients.delete(res));
 });

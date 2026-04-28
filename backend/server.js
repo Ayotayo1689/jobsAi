@@ -39,4 +39,12 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`\n🚀 JobsAI Backend running on http://localhost:${PORT}\n`);
+
+  // Auto-start WhatsApp bot if a saved session exists
+  const authPath = path.join(__dirname, '../.wwebjs_auth');
+  if (fs.existsSync(authPath) && fs.readdirSync(authPath).length > 0) {
+    const whatsapp = require('./services/whatsappService');
+    console.log('WhatsApp session found — auto-starting bot…');
+    whatsapp.start().catch(err => console.error('WhatsApp auto-start failed:', err.message));
+  }
 });

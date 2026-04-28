@@ -37,7 +37,7 @@ async function fetchRemotive(keywords, primaryKeyword) {
         postedAt: j.publication_date,
         source: 'Remotive'
       }));
-  } catch (e) { console.error('Remotive:', e.message); return []; }
+  } catch (e) { if (!e.response || e.response.status >= 500) console.error('Remotive:', e.message); return []; }
 }
 
 async function fetchArbeitnow(keywords, locationType) {
@@ -62,7 +62,7 @@ async function fetchArbeitnow(keywords, locationType) {
         postedAt: j.created_at ? new Date(j.created_at * 1000).toISOString() : new Date().toISOString(),
         source: 'Arbeitnow'
       }));
-  } catch (e) { console.error('Arbeitnow:', e.message); return []; }
+  } catch (e) { if (!e.response || e.response.status >= 500) console.error('Arbeitnow:', e.message); return []; }
 }
 
 async function fetchJobicy(keywords, geo, primaryKeyword) {
@@ -86,7 +86,7 @@ async function fetchJobicy(keywords, geo, primaryKeyword) {
         postedAt: j.pubDate,
         source: 'Jobicy'
       }));
-  } catch (e) { console.error('Jobicy:', e.message); return []; }
+  } catch (e) { if (!e.response || e.response.status >= 500) console.error('Jobicy:', e.message); return []; }
 }
 
 async function fetchHimalayas(keywords) {
@@ -109,7 +109,7 @@ async function fetchHimalayas(keywords) {
       postedAt: j.createdAt,
       source: 'Himalayas'
     }));
-  } catch (e) { console.error('Himalayas:', e.message); return []; }
+  } catch (e) { if (!e.response || e.response.status >= 500) console.error('Himalayas:', e.message); return []; }
 }
 
 async function fetchTheMuse(keywords, location, primaryKeyword) {
@@ -138,7 +138,7 @@ async function fetchTheMuse(keywords, location, primaryKeyword) {
           source: 'The Muse'
         };
       });
-  } catch (e) { console.error('TheMuse:', e.message); return []; }
+  } catch (e) { if (!e.response || e.response.status >= 500) console.error('TheMuse:', e.message); return []; }
 }
 
 // ─── Web Scrapers ─────────────────────────────────────────────────────────────
@@ -173,7 +173,7 @@ async function scrapeWeWorkRemotely(keyword) {
       }
     });
     return jobs.slice(0, 25);
-  } catch (e) { console.error('WWR:', e.message); return []; }
+  } catch (e) { if (!e.response || e.response.status >= 500) console.error('WWR:', e.message); return []; }
 }
 
 async function scrapeLinkedInJobs(keyword, location, locationType) {
@@ -207,7 +207,7 @@ async function scrapeLinkedInJobs(keyword, location, locationType) {
       }
     });
     return jobs.slice(0, 25);
-  } catch (e) { console.error('LinkedIn:', e.message); return []; }
+  } catch (e) { if (!e.response || e.response.status >= 500) console.error('LinkedIn:', e.message); return []; }
 }
 
 async function scrapeIndeed(keyword, location, locationType) {
@@ -250,7 +250,7 @@ async function scrapeIndeed(keyword, location, locationType) {
       }
     });
     return jobs.slice(0, 25);
-  } catch (e) { console.error('Indeed:', e.message); return []; }
+  } catch (e) { if (!e.response || e.response.status >= 500) console.error('Indeed:', e.message); return []; }
 }
 
 // ─── Optional: JSearch via RapidAPI (if key is provided) ─────────────────────
@@ -276,7 +276,7 @@ async function fetchJSearch(keyword, location, locationType, rapidApiKey) {
       postedAt: j.job_posted_at_datetime_utc,
       source: 'JSearch (LinkedIn/Indeed/Glassdoor)'
     }));
-  } catch (e) { console.error('JSearch:', e.message); return []; }
+  } catch (e) { if (!e.response || e.response.status >= 500) console.error('JSearch:', e.message); return []; }
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
