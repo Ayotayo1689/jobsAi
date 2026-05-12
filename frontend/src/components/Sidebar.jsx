@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, FileText, Search, ClipboardList, Settings, Zap, MessageSquare, LogOut } from 'lucide-react'
+import { LayoutDashboard, FileText, Search, ClipboardList, Settings, Zap, MessageSquare, LogOut, Bot } from 'lucide-react'
 import { clearLocalSettings } from '../utils/localSettings'
 
 const links = [
@@ -8,6 +8,7 @@ const links = [
   { to: '/jobs',         icon: Search,          label: 'Discover'             },
   { to: '/applications', icon: ClipboardList,   label: 'Applications'         },
   { to: '/whatsapp',     icon: MessageSquare,   label: 'WhatsApp Bot'         },
+  { to: '/bot-search',   icon: Bot,             label: 'Bot Search'           },
   { to: '/settings',     icon: Settings,        label: 'Settings'             },
 ]
 

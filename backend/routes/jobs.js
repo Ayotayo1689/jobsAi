@@ -196,10 +196,9 @@ router.post('/apply', async (req, res) => {
         await sendEmail({
           to: recruiterEmail,
           subject: emailContent.subject,
-          body: emailContent.body,
+          body: coverLetter,
           attachments: [
-            { filename: `${safeName}_Resume.pdf`, content: pdfBuffer, contentType: 'application/pdf' },
-            { filename: `CoverLetter_${(job.company || 'Company').replace(/\s+/g, '_')}.txt`, content: coverLetter }
+            { filename: `${safeName}_Resume.pdf`, content: pdfBuffer, contentType: 'application/pdf' }
           ]
         });
         emailSent = true;
@@ -250,7 +249,7 @@ router.post('/paste-apply', async (req, res) => {
     res.write(`event: ${event}\ndata: ${JSON.stringify(payload)}\n\n`);
   };
 
-  const { jobText, recruiterEmail } = req.body;
+  const { jobText, recruiterEmail, skipSend } = req.body;
 
   try {
     const data = store.read();
@@ -318,7 +317,10 @@ router.post('/paste-apply', async (req, res) => {
     const cfg = getConfig();
     const canEmail = cfg.emailConfig.host && cfg.emailConfig.user && cfg.emailConfig.pass;
 
-    if (!canEmail) {
+    if (skipSend) {
+      emailError = 'Review your documents before sending.';
+      push('step', { key: 'send', status: 'skipped', message: emailError });
+    } else if (!canEmail) {
       emailError = 'Email not configured. Download documents below to apply manually.';
       push('step', { key: 'send', status: 'skipped', message: emailError });
     } else if (!emailTo) {
@@ -331,10 +333,9 @@ router.post('/paste-apply', async (req, res) => {
         await sendEmail({
           to: emailTo,
           subject: emailContent.subject,
-          body: emailContent.body,
+          body: coverLetter,
           attachments: [
-            { filename: `${safeName}_Resume.pdf`, content: pdfBuffer, contentType: 'application/pdf' },
-            { filename: `CoverLetter_${(job.company || 'Company').replace(/\s+/g, '_')}.txt`, content: coverLetter }
+            { filename: `${safeName}_Resume.pdf`, content: pdfBuffer, contentType: 'application/pdf' }
           ]
         });
         emailSent = true;
@@ -357,6 +358,60 @@ router.post('/paste-apply', async (req, res) => {
   }
 
   res.end();
+});
+
+// ─── Send edited documents after review ───────────────────────────────────────
+router.post('/send-docs', async (req, res) => {
+  try {
+    const { applicationId, to, coverLetter, tailoredResume, subject, body } = req.body;
+    if (!to?.trim()) return res.status(400).json({ error: 'Recipient email is required.' });
+    if (!coverLetter && !tailoredResume) return res.status(400).json({ error: 'No documents to send.' });
+
+    const data = store.read();
+
+    // Save any edits made during review
+    if (applicationId) {
+      store.update(d => {
+        const app = (d.applications || []).find(a => a.id === applicationId);
+        if (app) {
+          if (coverLetter)   app.coverLetter   = coverLetter;
+          if (tailoredResume) app.tailoredResume = tailoredResume;
+        }
+        return d;
+      });
+    }
+
+    const { buffer: pdfBuffer, name: candidateName } = await buildResumePDF(
+      tailoredResume, data.resume?.analysis?.name
+    );
+    const safeName = candidateName.replace(/[^a-zA-Z0-9 _-]/g, '').replace(/\s+/g, '_');
+
+    // Find company name for cover letter filename
+    const updatedData = store.read();
+    const app = applicationId ? (updatedData.applications || []).find(a => a.id === applicationId) : null;
+    const company = app?.job?.company || 'Company';
+
+    await sendEmail({
+      to: to.trim(),
+      subject: subject || `Application for ${app?.job?.title || 'Position'}`,
+      body: coverLetter,
+      attachments: [
+        { filename: `${safeName}_Resume.pdf`, content: pdfBuffer, contentType: 'application/pdf' }
+      ]
+    });
+
+    if (applicationId) {
+      store.update(d => {
+        const a = (d.applications || []).find(a => a.id === applicationId);
+        if (a) { a.status = 'applied'; a.emailSentTo = to.trim(); a.updatedAt = new Date().toISOString(); }
+        return d;
+      });
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // ─── Generate + download tailored resume as formatted PDF ─────────────────────

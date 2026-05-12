@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { encodeSettingsHeader } from '../utils/localSettings'
+import { encodeSettingsHeader, loadLocalSettings } from '../utils/localSettings'
 
 const api = axios.create({
   baseURL: '/api',
@@ -66,7 +66,8 @@ export const jobsAPI = {
 
   // Streaming apply — calls onStep({key, status, data?, message?}) for each event
   apply: (job, recruiterEmail, onStep) => streamSSE('/api/jobs/apply', { job, recruiterEmail }, onStep),
-  pasteApply: (jobText, recruiterEmail, onStep) => streamSSE('/api/jobs/paste-apply', { jobText, recruiterEmail }, onStep),
+  pasteApply: (jobText, recruiterEmail, onStep) => streamSSE('/api/jobs/paste-apply', { jobText, recruiterEmail, skipSend: true }, onStep),
+  sendDocs: (data) => api.post('/jobs/send-docs', data, { timeout: 60000 }),
 }
 
 function streamSSE(url, body, onStep) {
@@ -122,6 +123,59 @@ export const applicationsAPI = {
   delete: (id) => api.delete(`/applications/${id}`),
   sendEmail: (data) => api.post('/applications/send-email', data),
   retailor: (id) => api.post(`/applications/${id}/retailor`)
+}
+
+export const botAPI = {
+  status: () => api.get('/bot/status'),
+  stop:   () => api.post('/bot/stop'),
+  run: (jobTitle, location, onJob, onProgress) => {
+    const { linkedinCookie } = loadLocalSettings()
+    return new Promise((resolve, reject) => {
+      fetch('/api/bot/run', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-jobsai-settings': encodeSettingsHeader()
+        },
+        body: JSON.stringify({ jobTitle, location, linkedinCookie })
+      }).then(res => {
+        const reader = res.body.getReader()
+        const decoder = new TextDecoder()
+        let buffer = ''
+
+        const parse = chunk => {
+          buffer += chunk
+          const blocks = buffer.split('\n\n')
+          buffer = blocks.pop()
+          for (const block of blocks) {
+            const lines = block.trim().split('\n')
+            let event = 'message', dataStr = ''
+            for (const line of lines) {
+              if (line.startsWith('event: ')) event = line.slice(7)
+              if (line.startsWith('data: '))  dataStr = line.slice(6)
+            }
+            if (!dataStr) continue
+            try {
+              const payload = JSON.parse(dataStr)
+              if (event === 'job')      onJob?.(payload)
+              if (event === 'progress') onProgress?.(payload.message)
+              if (event === 'step')     onProgress?.(payload.message || payload.key)
+              if (event === 'done')     resolve(payload)
+              if (event === 'error')    reject(new Error(payload.message))
+            } catch {}
+          }
+        }
+
+        const pump = () => reader.read().then(({ done, value }) => {
+          if (done) return
+          parse(decoder.decode(value, { stream: true }))
+          pump()
+        }).catch(reject)
+
+        pump()
+      }).catch(reject)
+    })
+  }
 }
 
 export const settingsAPI = {

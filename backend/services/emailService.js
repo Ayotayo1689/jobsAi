@@ -14,7 +14,10 @@ async function sendEmail({ to, subject, body, attachments = [] }) {
     host: emailConfig.host,
     port: emailConfig.port || 587,
     secure: emailConfig.secure || false,
-    auth: { user: emailConfig.user, pass: emailConfig.pass }
+    auth: { user: emailConfig.user, pass: emailConfig.pass },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000
   });
 
   await transporter.verify();

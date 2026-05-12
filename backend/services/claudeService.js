@@ -112,6 +112,8 @@ async function tailorResume(resumeText, job, missingSkills = []) {
 
   const prompt = `Tailor this resume for the job below. Keep every fact truthful — never fabricate experience.${missingNote}
 
+FIRST: Update the job title / headline line at the top of the resume (the line directly under the candidate's name) to exactly match: "${job.title}". If no headline line exists, add one.
+
 WRITING RULES — apply all of these without exception:
 - Each bullet must open with a DIFFERENT strong action verb. Scan all bullets before writing; if a verb appears more than once across the entire resume, replace the duplicate.
 - Forbidden weak or vague words/phrases: "responsible for", "worked on", "helped with", "assisted in", "various", "multiple", "leveraged", "utilized", "synergy", "results-driven", "detail-oriented", "team player", "passionate about", "dynamic", "innovative solutions". Replace every instance.
@@ -136,29 +138,32 @@ Return the complete tailored resume as clean plain text ready to copy.`;
 }
 
 async function generateCoverLetter(resumeText, job) {
-  const systemPrompt = `You are an expert cover letter writer. Write compelling, specific, ATS-friendly cover letters. Never use generic templates or filler language.`;
+  const systemPrompt = `You write short, human cover letters in strict first person. The candidate is writing this themselves. Every sentence uses "I", "my", or "me" — never refer to the candidate by name or in third person. Sound like a real person writing to a real person, not a template or a robot.`;
 
-  const prompt = `Write a professional cover letter (180-200 words maximum) for this application.
+  const prompt = `Write a cover letter for this application in first person. Hard limit: 150 words, exactly 2 paragraphs.
 
-WRITING RULES — apply all without exception:
-- 2-3 paragraphs only. Hard limit: 200 words. Cut ruthlessly.
-- Open with a specific, direct statement about WHY this role and company — not "I am excited to apply". Reference something concrete.
-- Every sentence must earn its place. Cut anything that could appear in any cover letter for any job.
-- Do NOT use: "I am a passionate", "results-driven", "team player", "I believe I would be a great fit", "I am writing to express my interest", "I am excited about the opportunity", "my skills align with", "I would love the chance to", "please find attached", "do not hesitate to contact me", "thank you for your consideration".
-- Each paragraph must make a different point.
-- Use strong, specific verbs. Prefer "I cut deployment time by 30%" over "I helped improve the process".
-- The closing paragraph states what you bring — confident, not supplicating. No bullet points.
+VOICE: Always "I", "my", "me". Never "[Name] brings…" or "The candidate has…" — the person is writing this themselves.
+
+TONE: Conversational but professional. Natural sentence rhythm, varied length. Like an email from a confident professional, not a formal letter.
+
+PARAGRAPH 1 (3–4 sentences): Lead with something specific about this role or company that genuinely interests me. Then name one concrete achievement of mine that directly maps to what this job needs — with a real number or outcome if the resume contains one.
+
+PARAGRAPH 2 (2–3 sentences): State clearly what I bring to this team. Close confident — no hedging, no asking for a chance, no "I hope to hear from you".
+
+FORBIDDEN (cut any sentence that contains these):
+"I am passionate", "I am a", "results-driven", "team player", "great fit", "I am writing", "excited about the opportunity", "skills align", "would love the chance", "please find attached", "do not hesitate", "thank you for your consideration", "I am confident", "I believe".
+
+Every sentence must be specific to THIS job and THIS resume. If it could appear in any cover letter, delete it.
 
 Job: ${job.title} at ${job.company}
-Description:
-${(job.description || '').substring(0, 2000)}
+${(job.description || '').substring(0, 1500)}
 
-Candidate Background:
-${resumeText.substring(0, 2000)}
+My resume:
+${resumeText.substring(0, 1500)}
 
-Start with "Dear Hiring Manager," — no date/address header.`;
+Begin with "Dear Hiring Manager," and nothing else before the first paragraph.`;
 
-  return await chat([{ role: 'user', content: prompt }], systemPrompt, 2048);
+  return await chat([{ role: 'user', content: prompt }], systemPrompt, 512);
 }
 
 async function generateEmail(resumeAnalysis, job, coverLetter) {

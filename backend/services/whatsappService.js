@@ -112,10 +112,9 @@ async function handleMessage(msg) {
         await sendEmail({
           to: emailTo,
           subject: emailContent.subject,
-          body: emailContent.body,
+          body: coverLetter,
           attachments: [
-            { filename: `${safeName}_Resume.pdf`, content: pdfBuffer, contentType: 'application/pdf' },
-            { filename: `CoverLetter_${(job.company || 'Company').replace(/\s+/g, '_')}.txt`, content: coverLetter }
+            { filename: `${safeName}_Resume.pdf`, content: pdfBuffer, contentType: 'application/pdf' }
           ]
         });
         store.update(d => {

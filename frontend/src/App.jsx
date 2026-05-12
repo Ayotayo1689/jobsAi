@@ -8,6 +8,7 @@ import JobDiscovery from './pages/JobDiscovery'
 import Applications from './pages/Applications'
 import WhatsApp from './pages/WhatsApp'
 import Settings from './pages/Settings'
+import BotSearch from './pages/BotSearch'
 import { isLoggedIn } from './utils/localSettings'
 
 function useAuthStatus() {
@@ -41,6 +42,7 @@ export default function App() {
         <Route path="jobs" element={<Protected loggedIn={loggedIn}><JobDiscovery /></Protected>} />
         <Route path="applications" element={<Protected loggedIn={loggedIn}><Applications /></Protected>} />
         <Route path="whatsapp" element={<Protected loggedIn={loggedIn}><WhatsApp /></Protected>} />
+        <Route path="bot-search" element={<Protected loggedIn={loggedIn}><BotSearch /></Protected>} />
         <Route path="settings" element={<Settings />} />
       </Route>
     </Routes>

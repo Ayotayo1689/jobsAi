@@ -1,14 +1,33 @@
 const PDFDocument = require('pdfkit');
 
-// Clean, neutral palette — no purple/indigo
 const C = {
-  name:    '#0d1117',   // very dark for candidate name
-  dark:    '#1c2333',   // job titles, section headers
-  body:    '#24292f',   // bullet text, summary, body
-  mid:     '#444c56',   // company name, institution
-  light:   '#656d76',   // dates, secondary info
-  divider: '#d0d7de',   // thin rule under section headers
+  name:    '#0d1117',
+  dark:    '#1c2333',
+  body:    '#24292f',
+  mid:     '#444c56',
+  light:   '#656d76',
+  divider: '#d0d7de',
 };
+
+// Returns the new y — adds a page if content won't fit
+function pageBreakIfNeeded(doc, y, needed) {
+  const bottom = doc.page.height - doc.page.margins.bottom;
+  if (y + needed > bottom) {
+    doc.addPage();
+    return doc.page.margins.top;
+  }
+  return y;
+}
+
+// Draws a section header and returns the new y
+function sectionHeader(doc, title, L, y, W) {
+  doc.font('Helvetica-Bold').fontSize(9.5).fillColor(C.dark)
+     .text(title, L, y, { width: W, characterSpacing: 1 });
+  const lineY = doc.y + 2;
+  doc.moveTo(L, lineY).lineTo(L + W, lineY)
+     .strokeColor(C.divider).lineWidth(0.5).stroke();
+  return lineY + 8;
+}
 
 function generateResumePDF(data) {
   return new Promise((resolve, reject) => {
@@ -33,32 +52,26 @@ function generateResumePDF(data) {
 
     // ── HEADER ──────────────────────────────────────────────────────────────
 
-    // Thin dark top rule (not coloured)
     doc.rect(0, 0, doc.page.width, 3).fill(C.dark);
 
     let y = doc.page.margins.top + 10;
 
-    // Name
     doc.font('Helvetica-Bold').fontSize(26).fillColor(C.name)
        .text(data.name || 'Candidate', L, y, { width: W });
     y = doc.y + 2;
 
-    // Professional title
     if (data.title) {
       doc.font('Helvetica').fontSize(11.5).fillColor(C.mid)
          .text(data.title, L, y, { width: W });
       y = doc.y + 2;
     }
 
-    // Contact info — include portfolio/website
     const contacts = [
-      data.email,
-      data.phone,
-      data.location,
-      data.website  ? cleanUrl(data.website)  : null,
-      data.portfolio? cleanUrl(data.portfolio) : null,
-      data.linkedin ? cleanUrl(data.linkedin)  : null,
-      data.github   ? cleanUrl(data.github)    : null
+      data.email, data.phone, data.location,
+      data.website   ? cleanUrl(data.website)   : null,
+      data.portfolio ? cleanUrl(data.portfolio) : null,
+      data.linkedin  ? cleanUrl(data.linkedin)  : null,
+      data.github    ? cleanUrl(data.github)    : null,
     ].filter(Boolean);
 
     if (contacts.length) {
@@ -67,14 +80,13 @@ function generateResumePDF(data) {
       y = doc.y + 4;
     }
 
-    // Section divider line
     y += 6;
-    doc.moveTo(L, y).lineTo(L + W, y)
-       .strokeColor(C.dark).lineWidth(1).stroke();
+    doc.moveTo(L, y).lineTo(L + W, y).strokeColor(C.dark).lineWidth(1).stroke();
     y += 12;
 
     // ── SUMMARY ─────────────────────────────────────────────────────────────
     if (data.summary) {
+      y = pageBreakIfNeeded(doc, y, 60);
       y = sectionHeader(doc, 'PROFESSIONAL SUMMARY', L, y, W);
       doc.font('Helvetica').fontSize(10.5).fillColor(C.body)
          .text(data.summary, L, y, { width: W, lineGap: 3, align: 'justify' });
@@ -83,6 +95,7 @@ function generateResumePDF(data) {
 
     // ── SKILLS ──────────────────────────────────────────────────────────────
     if (data.skills?.length) {
+      y = pageBreakIfNeeded(doc, y, 45);
       y = sectionHeader(doc, 'SKILLS', L, y, W);
       doc.font('Helvetica').fontSize(10.5).fillColor(C.body)
          .text(data.skills.join('   ·   '), L, y, { width: W, lineGap: 3 });
@@ -91,49 +104,78 @@ function generateResumePDF(data) {
 
     // ── EXPERIENCE ───────────────────────────────────────────────────────────
     if (data.experience?.length) {
+      y = pageBreakIfNeeded(doc, y, 80);
       y = sectionHeader(doc, 'EXPERIENCE', L, y, W);
 
       for (const exp of data.experience) {
-        // Title row: role on left, dates on right — same baseline
-        const titleY = y;
+        y = pageBreakIfNeeded(doc, y, 55);
+
+        // Measure font heights so title and date are baseline-aligned
+        doc.font('Helvetica-Bold').fontSize(11);
+        const titleH = doc.currentLineHeight(true);
+        doc.font('Helvetica').fontSize(9.5);
+        const dateH = doc.currentLineHeight(true);
+        const dateOffset = Math.round((titleH - dateH) / 2);
+
+        // Title (left) — no line break so doc.y doesn't advance
         doc.font('Helvetica-Bold').fontSize(11).fillColor(C.dark)
-           .text(exp.title || '', L, titleY, { width: W * 0.66, lineBreak: false });
-        doc.font('Helvetica').fontSize(9.5).fillColor(C.light)
-           .text(exp.duration || '', L, titleY, { width: W, align: 'right', lineBreak: false });
-        y = titleY + doc.currentLineHeight(true) + 2;
+           .text(exp.title || '', L, y, { width: W * 0.65, lineBreak: false });
 
-        // Company + location — small margin top before it
-        y += 4;
+        // Duration (right) — vertically centered against title
+        if (exp.duration) {
+          doc.font('Helvetica').fontSize(9.5).fillColor(C.light)
+             .text(exp.duration, L, y + dateOffset, { width: W, align: 'right', lineBreak: false });
+        }
+
+        // Advance past the title row
+        y += titleH + 4;
+
+        // Company · Location
         const compLine = [exp.company, exp.location].filter(Boolean).join('   ·   ');
-        doc.font('Helvetica-Oblique').fontSize(10).fillColor(C.mid)
-           .text(compLine, L, y, { width: W });
-        y = doc.y;
+        if (compLine) {
+          doc.font('Helvetica-Oblique').fontSize(10).fillColor(C.mid)
+             .text(compLine, L, y, { width: W });
+          y = doc.y;
+        }
 
-        // Bullets — gap before first bullet
+        // Bullets
         if (exp.bullets?.length) {
-          y += 10;
+          y += 8;
           for (const bullet of exp.bullets) {
+            y = pageBreakIfNeeded(doc, y, 22);
             doc.font('Helvetica').fontSize(10.5).fillColor(C.body)
-               .text(`•   ${bullet}`, L + 14, y, { width: W - 14, lineGap: 3 });
-            y = doc.y + 6;   // spacing between bullets
+               .text(`•   ${bullet}`, L + 14, y, { width: W - 14, lineGap: 2 });
+            y = doc.y + 4;
           }
         }
 
-        y += 10;  // gap between job entries
+        y += 10;
       }
     }
 
     // ── EDUCATION ────────────────────────────────────────────────────────────
     if (data.education?.length) {
+      y = pageBreakIfNeeded(doc, y, 60);
       y = sectionHeader(doc, 'EDUCATION', L, y, W);
 
       for (const edu of data.education) {
-        const degY = y;
+        y = pageBreakIfNeeded(doc, y, 40);
+
+        doc.font('Helvetica-Bold').fontSize(11);
+        const degH = doc.currentLineHeight(true);
+        doc.font('Helvetica').fontSize(9.5);
+        const yearH = doc.currentLineHeight(true);
+        const yearOffset = Math.round((degH - yearH) / 2);
+
         doc.font('Helvetica-Bold').fontSize(11).fillColor(C.dark)
-           .text(edu.degree || '', L, degY, { width: W * 0.72, lineBreak: false });
-        doc.font('Helvetica').fontSize(9.5).fillColor(C.light)
-           .text(edu.year || '', L, degY, { width: W, align: 'right', lineBreak: false });
-        y = degY + doc.currentLineHeight(true) + 4;
+           .text(edu.degree || '', L, y, { width: W * 0.72, lineBreak: false });
+
+        if (edu.year) {
+          doc.font('Helvetica').fontSize(9.5).fillColor(C.light)
+             .text(edu.year, L, y + yearOffset, { width: W, align: 'right', lineBreak: false });
+        }
+
+        y += degH + 4;
 
         doc.font('Helvetica').fontSize(10).fillColor(C.mid)
            .text(edu.institution || '', L, y, { width: W });
@@ -145,27 +187,33 @@ function generateResumePDF(data) {
              .text(`GPA: ${edu.gpa}`, L, y, { width: W });
           y = doc.y;
         }
+
         y += 10;
       }
     }
 
     // ── CERTIFICATIONS ───────────────────────────────────────────────────────
     if (data.certifications?.length) {
+      y = pageBreakIfNeeded(doc, y, 45);
       y = sectionHeader(doc, 'CERTIFICATIONS', L, y, W);
 
       for (const cert of data.certifications) {
+        y = pageBreakIfNeeded(doc, y, 20);
         doc.font('Helvetica').fontSize(10.5).fillColor(C.body)
-           .text(`•   ${cert}`, L + 14, y, { width: W - 14, lineGap: 3 });
-        y = doc.y + 6;
+           .text(`•   ${cert}`, L + 14, y, { width: W - 14, lineGap: 2 });
+        y = doc.y + 4;
       }
       y += 6;
     }
 
     // ── PROJECTS ─────────────────────────────────────────────────────────────
     if (data.projects?.length) {
+      y = pageBreakIfNeeded(doc, y, 60);
       y = sectionHeader(doc, 'PROJECTS', L, y, W);
 
       for (const proj of data.projects) {
+        y = pageBreakIfNeeded(doc, y, 40);
+
         doc.font('Helvetica-Bold').fontSize(11).fillColor(C.dark)
            .text(proj.name || '', L, y, { width: W });
         y = doc.y;
@@ -178,28 +226,18 @@ function generateResumePDF(data) {
         }
 
         if (proj.description) {
-          y += 6;
+          y += 5;
           doc.font('Helvetica').fontSize(10.5).fillColor(C.body)
-             .text(`•   ${proj.description}`, L + 14, y, { width: W - 14, lineGap: 3 });
+             .text(`•   ${proj.description}`, L + 14, y, { width: W - 14, lineGap: 2 });
           y = doc.y;
         }
+
         y += 10;
       }
     }
 
     doc.end();
   });
-}
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
-function sectionHeader(doc, title, L, y, W) {
-  doc.font('Helvetica-Bold').fontSize(9.5).fillColor(C.dark)
-     .text(title, L, y, { width: W, characterSpacing: 1 });
-  const lineY = doc.y + 2;
-  doc.moveTo(L, lineY).lineTo(L + W, lineY)
-     .strokeColor(C.divider).lineWidth(0.5).stroke();
-  return lineY + 8;
 }
 
 function cleanUrl(url) {

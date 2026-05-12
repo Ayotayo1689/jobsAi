@@ -3,6 +3,9 @@ const SETTINGS_KEY = 'jobsai.localSettings'
 export const DEFAULT_SETTINGS = {
   claudeApiKey: '',
   rapidApiKey: '',
+  apolloApiKey: '',
+  hunterApiKey: '',
+  linkedinCookie: '',
   emailConfig: {
     host: '',
     port: '587',
@@ -24,12 +27,15 @@ export const REQUIRED_FIELDS = [
 
 function cleanSettings(settings = {}) {
   return {
-    claudeApiKey: settings.claudeApiKey || '',
-    rapidApiKey: settings.rapidApiKey || '',
+    claudeApiKey:     settings.claudeApiKey     || '',
+    rapidApiKey:      settings.rapidApiKey      || '',
+    apolloApiKey:   settings.apolloApiKey   || '',
+    hunterApiKey:   settings.hunterApiKey   || '',
+    linkedinCookie: settings.linkedinCookie || '',
     emailConfig: {
       ...DEFAULT_SETTINGS.emailConfig,
       ...(settings.emailConfig || {}),
-      port: String(settings.emailConfig?.port || DEFAULT_SETTINGS.emailConfig.port),
+      port:   String(settings.emailConfig?.port || DEFAULT_SETTINGS.emailConfig.port),
       secure: !!settings.emailConfig?.secure
     }
   }

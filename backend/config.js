@@ -35,8 +35,11 @@ function getConfig() {
   const lec = ls.emailConfig || {};
 
   return {
-    claudeApiKey: process.env.CLAUDE_API_KEY || ls.claudeApiKey || s.claudeApiKey || '',
-    rapidApiKey:  process.env.RAPID_API_KEY  || ls.rapidApiKey  || s.rapidApiKey  || '',
+    claudeApiKey:    process.env.CLAUDE_API_KEY    || ls.claudeApiKey    || s.claudeApiKey    || '',
+    rapidApiKey:     process.env.RAPID_API_KEY     || ls.rapidApiKey     || s.rapidApiKey     || '',
+    apolloApiKey:   process.env.APOLLO_API_KEY   || ls.apolloApiKey   || s.apolloApiKey   || '',
+    hunterApiKey:   process.env.HUNTER_API_KEY   || ls.hunterApiKey   || s.hunterApiKey   || '',
+    linkedinCookie: process.env.LINKEDIN_COOKIE  || ls.linkedinCookie || s.linkedinCookie || '',
     emailConfig: {
       host:     process.env.SMTP_HOST     || lec.host     || ec.host     || '',
       port:     parseInt(process.env.SMTP_PORT) || parseInt(lec.port) || ec.port || 587,

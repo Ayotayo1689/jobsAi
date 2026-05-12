@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import {
   ClipboardList, ExternalLink, Trash2, X,
@@ -23,7 +24,6 @@ const PASTE_STEPS = [
   { key: 'tailor',    label: 'Tailoring resume' },
   { key: 'cover',     label: 'Writing cover letter' },
   { key: 'email_gen', label: 'Drafting application email' },
-  { key: 'send',      label: 'Sending application' }
 ]
 
 const APPLY_STEPS = [
@@ -171,27 +171,79 @@ function ResultPanel({ result, job, onClose, onReload }) {
 
 // ─── Paste & Apply Modal ──────────────────────────────────────────────────────
 
-function PasteModal({ onClose, onDone }) {
-  const [phase, setPhase] = useState('input')
-  const [jobText, setJobText] = useState('')
-  const [recruiterEmail, setRecruiterEmail] = useState('')
-  const [steps, setSteps] = useState({})
-  const [result, setResult] = useState(null)
+function PasteModal({ onClose, onDone, initialJobText = '', initialEmail = '' }) {
+  const [phase, setPhase]           = useState('input')
+  const [jobText, setJobText]       = useState(initialJobText)
+  const [steps, setSteps]           = useState({})
+  const [result, setResult]         = useState(null)
+  const [editCover, setEditCover]   = useState('')
+  const [editResume, setEditResume] = useState('')
+  const [reviewTab, setReviewTab]   = useState('cover')
+  const [sendEmail, setSendEmail]     = useState(initialEmail)
+  const [sendSubject, setSendSubject] = useState('')
+  const [sending, setSending]         = useState(false)
+  const [pdfLoading, setPdfLoading]   = useState(false)
 
-  const handleApply = async () => {
+  const downloadTxt = (content, filename) => {
+    const blob = new Blob([content || ''], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url; a.download = filename; a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const handleDownloadPDF = async () => {
+    setPdfLoading(true)
+    try {
+      await jobsAPI.downloadResumePDF(editResume)
+      toast.success('Resume PDF downloaded!')
+    } catch (err) {
+      toast.error(err.message)
+    } finally {
+      setPdfLoading(false)
+    }
+  }
+
+  const handleGenerate = async () => {
     if (!jobText.trim()) { toast.error('Paste a job description first'); return }
     setPhase('running')
     setSteps({})
     try {
-      const res = await jobsAPI.pasteApply(jobText, recruiterEmail || null, (step) => {
+      const res = await jobsAPI.pasteApply(jobText, null, (step) => {
         setSteps(prev => ({ ...prev, [step.key]: step }))
       })
       setResult(res)
-      setPhase('done')
-      if (res.emailSent) toast.success(`Application sent to ${res.job?.company || 'company'}!`)
+      setEditCover(res.coverLetter || '')
+      setEditResume(res.tailoredResume || '')
+      setSendSubject(res.email?.subject || '')
+      // Pre-fill email if found in job posting
+      if (res.job?.email) setSendEmail(res.job.email)
+      setPhase('review')
     } catch (err) {
       toast.error(err.message)
       setPhase('input')
+    }
+  }
+
+  const handleSend = async () => {
+    if (!sendEmail.trim()) { toast.error('Enter a recruiter email to send'); return }
+    setSending(true)
+    try {
+      await jobsAPI.sendDocs({
+        applicationId: result.applicationId,
+        to: sendEmail.trim(),
+        coverLetter: editCover,
+        tailoredResume: editResume,
+        subject: sendSubject || result.email?.subject,
+        body: result.email?.body
+      })
+      toast.success(`Application sent to ${result.job?.company || 'company'}!`)
+      onDone?.()
+      onClose()
+    } catch (err) {
+      toast.error(err.message)
+    } finally {
+      setSending(false)
     }
   }
 
@@ -202,9 +254,14 @@ function PasteModal({ onClose, onDone }) {
         <div className="flex items-center justify-between p-4 border-b border-edge">
           <div>
             <h3 className="font-semibold text-ink flex items-center gap-2">
-              <ClipboardPaste size={16} className="text-brand" /> Paste & Apply
+              <ClipboardPaste size={16} className="text-brand" />
+              {phase === 'review' ? `Review — ${result?.job?.title || 'Application'}` : 'Paste & Apply'}
             </h3>
-            <p className="text-xs text-ink-muted mt-0.5">Paste any job description — AI handles the rest</p>
+            <p className="text-xs text-ink-muted mt-0.5">
+              {phase === 'review'
+                ? 'Edit your documents, then send or save'
+                : 'Paste any job description — AI handles the rest'}
+            </p>
           </div>
           {phase !== 'running' && <button onClick={onClose} className="btn-ghost p-1.5"><X size={16} /></button>}
         </div>
@@ -212,36 +269,24 @@ function PasteModal({ onClose, onDone }) {
         {/* INPUT */}
         {phase === 'input' && (
           <>
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              <div>
-                <label className="text-xs text-ink-sub mb-1.5 block font-medium">Job Description</label>
-                <textarea
-                  className="input-field font-mono text-xs leading-relaxed"
-                  rows={12}
-                  value={jobText}
-                  onChange={e => setJobText(e.target.value)}
-                  placeholder="Paste the full job posting here — include the title, company, description, requirements, and any contact email or application URL..."
-                  autoFocus
-                />
-                <p className="text-xs text-ink-muted mt-1">
-                  Paste as much as possible. AI extracts: title, company, email, link, skills.
-                </p>
-              </div>
-              <div>
-                <label className="text-xs text-ink-sub mb-1 block">Recruiter Email <span className="text-ink-muted">(optional — overrides any found in the text)</span></label>
-                <input
-                  type="email"
-                  className="input-field"
-                  value={recruiterEmail}
-                  onChange={e => setRecruiterEmail(e.target.value)}
-                  placeholder="recruiter@company.com"
-                />
-              </div>
+            <div className="flex-1 overflow-y-auto p-4">
+              <label className="text-xs text-ink-sub mb-1.5 block font-medium">Job Description</label>
+              <textarea
+                className="input-field font-mono text-xs leading-relaxed"
+                rows={14}
+                value={jobText}
+                onChange={e => setJobText(e.target.value)}
+                placeholder="Paste the full job posting here — title, company, requirements, any contact email or link..."
+                autoFocus
+              />
+              <p className="text-xs text-ink-muted mt-1.5">
+                AI will extract the details and generate a tailored resume + cover letter for you to review before sending.
+              </p>
             </div>
             <div className="p-4 border-t border-edge flex gap-2 justify-end">
               <button onClick={onClose} className="btn-secondary text-sm">Cancel</button>
-              <button onClick={handleApply} disabled={!jobText.trim()} className="btn-primary text-sm">
-                <Zap size={14} /> Apply Now
+              <button onClick={handleGenerate} disabled={!jobText.trim()} className="btn-primary text-sm">
+                <Zap size={14} /> Generate Documents
               </button>
             </div>
           </>
@@ -250,14 +295,104 @@ function PasteModal({ onClose, onDone }) {
         {/* RUNNING */}
         {phase === 'running' && (
           <div className="flex-1 overflow-y-auto p-4">
-            <p className="text-sm text-ink-sub mb-4">Processing your application…</p>
+            <p className="text-sm text-ink-sub mb-4">Generating your application documents…</p>
             <StepList steps={steps} stepDefs={PASTE_STEPS} />
           </div>
         )}
 
-        {/* DONE */}
-        {phase === 'done' && result && (
-          <ResultPanel result={result} onClose={onClose} onReload={onDone} />
+        {/* REVIEW */}
+        {phase === 'review' && result && (
+          <>
+            {/* Score + job info */}
+            <div className="px-4 py-2.5 bg-gray-50 border-b border-edge flex items-center gap-3">
+              <span className="text-2xl font-bold text-brand">{result.match?.score ?? '—'}%</span>
+              <div className="text-xs">
+                <span className="font-medium text-ink-sub">match</span>
+                {result.match?.missingSkills?.length > 0 && (
+                  <span className="text-ink-muted ml-2">· gaps addressed: {result.match.missingSkills.slice(0, 3).join(', ')}</span>
+                )}
+              </div>
+            </div>
+
+            {/* Doc tabs + download */}
+            <div className="flex items-center gap-1 px-4 pt-3 pb-2 border-b border-edge">
+              {[{ key: 'cover', label: 'Cover Letter' }, { key: 'resume', label: 'Tailored Resume' }].map(t => (
+                <button key={t.key} onClick={() => setReviewTab(t.key)}
+                  className={`px-3 py-1.5 text-sm rounded-md transition-colors ${reviewTab === t.key ? 'bg-brand-light text-brand font-medium' : 'text-ink-muted hover:text-ink-sub'}`}>
+                  {t.label}
+                </button>
+              ))}
+              <div className="ml-auto flex gap-1">
+                {reviewTab === 'cover' && (
+                  <button
+                    onClick={() => downloadTxt(editCover, `CoverLetter_${(result.job?.company || 'Company').replace(/\s+/g,'_')}.txt`)}
+                    className="btn-ghost text-xs"
+                  >
+                    <FileDown size={12} /> .txt
+                  </button>
+                )}
+                {reviewTab === 'resume' && (
+                  <button onClick={handleDownloadPDF} disabled={pdfLoading} className="btn-ghost text-xs">
+                    {pdfLoading ? <Loader2 size={12} className="animate-spin" /> : <Download size={12} />}
+                    PDF
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {/* Editable textarea */}
+              <textarea
+                key={reviewTab}
+                className="w-full font-mono text-xs text-ink-mid leading-relaxed border border-edge rounded-lg p-3 bg-gray-50 focus:outline-none focus:border-accent resize-none"
+                rows={reviewTab === 'cover' ? 10 : 16}
+                value={reviewTab === 'cover' ? editCover : editResume}
+                onChange={e => reviewTab === 'cover' ? setEditCover(e.target.value) : setEditResume(e.target.value)}
+              />
+
+              {/* Subject + Email inputs */}
+              <div>
+                <label className="text-xs text-ink-sub mb-1 block font-medium">Email Subject</label>
+                <input
+                  type="text"
+                  className="input-field"
+                  value={sendSubject}
+                  onChange={e => setSendSubject(e.target.value)}
+                  placeholder="Application for [Role] – [Name]"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-ink-sub mb-1 block font-medium">
+                  Send to (recruiter email)
+                </label>
+                <input
+                  type="email"
+                  className="input-field"
+                  value={sendEmail}
+                  onChange={e => setSendEmail(e.target.value)}
+                  placeholder="recruiter@company.com"
+                />
+                {result.job?.email && sendEmail !== result.job.email && (
+                  <button onClick={() => setSendEmail(result.job.email)}
+                    className="text-xs text-brand hover:text-brand-dark mt-1">
+                    Use {result.job.email} (found in posting)
+                  </button>
+                )}
+                <p className="text-xs text-ink-muted mt-1">Leave blank to save documents without sending.</p>
+              </div>
+            </div>
+
+            <div className="p-4 border-t border-edge flex gap-2 justify-end">
+              <button onClick={() => { onDone?.(); onClose() }} className="btn-secondary text-sm">
+                Save Without Sending
+              </button>
+              <button onClick={handleSend} disabled={sending || !sendEmail.trim()} className="btn-primary text-sm">
+                {sending
+                  ? <><RefreshCw size={13} className="animate-spin" /> Sending…</>
+                  : <><Send size={13} /> Send Application</>}
+              </button>
+            </div>
+          </>
         )}
       </div>
     </div>
@@ -601,13 +736,14 @@ function SourceTag({ app }) {
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function Applications() {
+  const location = useLocation()
   const [applications, setApplications] = useState([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('all')
   const [emailModal, setEmailModal] = useState(null)
   const [detailModal, setDetailModal] = useState(null)
   const [applyModal, setApplyModal] = useState(null)
-  const [pasteModal, setPasteModal] = useState(false)
+  const [pasteModal, setPasteModal] = useState(null) // null | { jobText, email }
   const [retailoringId, setRetailoringId] = useState(null)
 
   const load = () => {
@@ -617,6 +753,18 @@ export default function Applications() {
   }
 
   useEffect(load, [])
+
+  // Auto-open PasteModal when navigated here from Bot Search
+  useEffect(() => {
+    if (location.state?.openPaste) {
+      setPasteModal({
+        jobText: location.state.jobText || '',
+        email: location.state.recruiterEmail || ''
+      })
+      // Clear the state so a back-navigation doesn't re-open it
+      window.history.replaceState({}, '')
+    }
+  }, [location.state])
 
   const handleStatusChange = async (id, status) => {
     try {
@@ -680,7 +828,7 @@ export default function Applications() {
             )}
           </div>
           <button
-            onClick={() => setPasteModal(true)}
+            onClick={() => setPasteModal({})}
             className="btn-primary text-sm"
           >
             <ClipboardPaste size={14} /> Paste & Apply
@@ -743,7 +891,7 @@ export default function Applications() {
             </p>
             {activeTab === 'manual' && (
               <p className="text-xs text-ink-muted mt-1">
-                Click <button onClick={() => setPasteModal(true)} className="text-brand hover:underline">Paste & Apply</button> to apply from a job description
+                Click <button onClick={() => setPasteModal({})} className="text-brand hover:underline">Paste & Apply</button> to apply from a job description
               </p>
             )}
           </div>
@@ -822,8 +970,13 @@ export default function Applications() {
         )}
       </div>
 
-      {pasteModal && (
-        <PasteModal onClose={() => setPasteModal(false)} onDone={() => { setPasteModal(false); load() }} />
+      {pasteModal !== null && (
+        <PasteModal
+          initialJobText={pasteModal?.jobText || ''}
+          initialEmail={pasteModal?.email || ''}
+          onClose={() => setPasteModal(null)}
+          onDone={() => { setPasteModal(null); load() }}
+        />
       )}
       {emailModal && (
         <EmailModal application={emailModal} onClose={() => setEmailModal(null)} onSent={load} />

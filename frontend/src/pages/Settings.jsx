@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import {
   Key, Mail, Save, Eye, EyeOff, CheckCircle2,
-  AlertCircle, RefreshCw, Shield, Search
+  AlertCircle, RefreshCw, Shield, Search, Bot
 } from 'lucide-react'
 import { loadLocalSettings, saveLocalSettings, missingRequiredSettings } from '../utils/localSettings'
 
@@ -39,8 +39,14 @@ export default function Settings() {
   const [showRapid, setShowRapid] = useState(false)
   const [showPass, setShowPass]   = useState(false)
 
-  const [claudeKey, setClaudeKey]     = useState('')
-  const [rapidApiKey, setRapidApiKey] = useState('')
+  const [claudeKey, setClaudeKey]         = useState('')
+  const [rapidApiKey, setRapidApiKey]     = useState('')
+  const [apolloKey, setApolloKey]           = useState('')
+  const [hunterKey, setHunterKey]           = useState('')
+  const [linkedinCookie, setLinkedinCookie] = useState('')
+  const [showApollo, setShowApollo]         = useState(false)
+  const [showHunter, setShowHunter]         = useState(false)
+  const [showCookie, setShowCookie]         = useState(false)
   const [email, setEmail] = useState({
     host: '', port: '587', secure: false, user: '', pass: '', fromName: ''
   })
@@ -49,6 +55,9 @@ export default function Settings() {
     const s = loadLocalSettings()
     setClaudeKey(s.claudeApiKey || '')
     setRapidApiKey(s.rapidApiKey || '')
+    setApolloKey(s.apolloApiKey || '')
+    setHunterKey(s.hunterApiKey || '')
+    setLinkedinCookie(s.linkedinCookie || '')
     setEmail({
       host:     s.emailConfig.host     || '',
       port:     String(s.emailConfig.port || '587'),
@@ -66,6 +75,9 @@ export default function Settings() {
       const settings = saveLocalSettings({
         claudeApiKey: claudeKey,
         rapidApiKey,
+        apolloApiKey: apolloKey,
+        hunterApiKey: hunterKey,
+        linkedinCookie,
         emailConfig: { ...email, port: parseInt(email.port) || 587 }
       })
       const missing = missingRequiredSettings(settings)
@@ -256,6 +268,93 @@ export default function Settings() {
           <p className="font-medium text-ink-sub">Gmail:</p>
           <p>Google Account, Security, App Passwords, generate one and paste it above.</p>
           <p>Host: <code className="text-ink-mid font-mono">smtp.gmail.com</code> / Port <code className="text-ink-mid font-mono">587</code></p>
+        </div>
+      </Section>
+
+      <Section icon={Bot} title="LinkedIn Bot" description="Session cookie the bot uses to access LinkedIn — no password needed">
+        <div>
+          <FieldLabel label="Session Cookie (li_at)" />
+          <div className="relative">
+            <input
+              type={showCookie ? 'text' : 'password'}
+              className="input-field pr-10 font-mono text-xs"
+              value={linkedinCookie}
+              onChange={e => setLinkedinCookie(e.target.value)}
+              placeholder="Paste your li_at cookie value here…"
+            />
+            <button
+              type="button"
+              onClick={() => setShowCookie(!showCookie)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-faint hover:text-ink-sub transition-colors"
+            >
+              {showCookie ? <EyeOff size={15} /> : <Eye size={15} />}
+            </button>
+          </div>
+        </div>
+
+        {linkedinCookie ? (
+          <div className="flex items-center gap-2 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-md px-3 py-2">
+            <CheckCircle2 size={12} /> LinkedIn session cookie saved
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-3 py-2">
+            <AlertCircle size={12} /> Required to run the Bot Search feature
+          </div>
+        )}
+
+        <div className="bg-gray-50 border border-edge rounded-md p-3 text-xs text-ink-muted space-y-1">
+          <p className="font-medium text-ink-sub">How to get your li_at cookie:</p>
+          <p>1. Log in to linkedin.com in Chrome</p>
+          <p>2. Press F12 → Application → Cookies → www.linkedin.com</p>
+          <p>3. Find the cookie named <code className="text-ink-mid font-mono">li_at</code> and copy its value</p>
+          <p>4. Paste it above and save</p>
+          <p className="text-ink-muted pt-1">The cookie expires when you log out of LinkedIn — refresh it if the bot stops working.</p>
+        </div>
+      </Section>
+
+      <Section icon={Search} title="Email Enrichment" description="APIs used to find recruiter emails for scraped job listings (optional)">
+        <div>
+          <FieldLabel label="Apollo.io API Key" />
+          <div className="relative">
+            <input
+              type={showApollo ? 'text' : 'password'}
+              className="input-field pr-10"
+              value={apolloKey}
+              onChange={e => setApolloKey(e.target.value)}
+              placeholder="Your Apollo.io API key"
+            />
+            <button
+              type="button"
+              onClick={() => setShowApollo(!showApollo)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-faint hover:text-ink-sub transition-colors"
+            >
+              {showApollo ? <EyeOff size={15} /> : <Eye size={15} />}
+            </button>
+          </div>
+        </div>
+        <div>
+          <FieldLabel label="Hunter.io API Key" />
+          <div className="relative">
+            <input
+              type={showHunter ? 'text' : 'password'}
+              className="input-field pr-10"
+              value={hunterKey}
+              onChange={e => setHunterKey(e.target.value)}
+              placeholder="Your Hunter.io API key"
+            />
+            <button
+              type="button"
+              onClick={() => setShowHunter(!showHunter)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-faint hover:text-ink-sub transition-colors"
+            >
+              {showHunter ? <EyeOff size={15} /> : <Eye size={15} />}
+            </button>
+          </div>
+        </div>
+        <div className="bg-gray-50 border border-edge rounded-md p-3 text-xs text-ink-muted space-y-1">
+          <p className="font-medium text-ink-sub">Get free API keys:</p>
+          <p>Apollo.io — app.apollo.io → API Keys (free tier: 50 credits/month)</p>
+          <p>Hunter.io — hunter.io → API → copy key (free tier: 25 searches/month)</p>
         </div>
       </Section>
 

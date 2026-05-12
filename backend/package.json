@@ -19,6 +19,7 @@
     "nodemailer": "^6.9.13",
     "pdf-parse": "^1.1.1",
     "pdfkit": "^0.18.0",
+    "puppeteer": "^24.42.0",
     "qrcode": "^1.5.4",
     "uuid": "^9.0.1",
     "whatsapp-web.js": "^1.34.7"
