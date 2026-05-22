@@ -4,8 +4,8 @@
   "description": "AI-powered job application assistant backend",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node api.js && node server.js",
+    "dev": "node api.js && nodemon server.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.52.0",
